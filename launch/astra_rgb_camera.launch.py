@@ -12,6 +12,7 @@ def generate_launch_description():
     width = LaunchConfiguration("width")
     height = LaunchConfiguration("height")
     fps = LaunchConfiguration("fps")
+    qos_reliability = LaunchConfiguration("qos_reliability")
 
     return LaunchDescription(
         [
@@ -20,9 +21,14 @@ def generate_launch_description():
                 default_value="",
                 description="V4L2 node; empty automatically finds USB 2bc5:050f.",
             ),
-            DeclareLaunchArgument("width", default_value="1280"),
+            DeclareLaunchArgument("width", default_value="640"),
             DeclareLaunchArgument("height", default_value="480"),
-            DeclareLaunchArgument("fps", default_value="60.0"),
+            DeclareLaunchArgument("fps", default_value="30.0"),
+            DeclareLaunchArgument(
+                "qos_reliability",
+                default_value="reliable",
+                choices=["reliable", "best_effort"],
+            ),
             Node(
                 package="astra_rgb_camera",
                 executable="rgb_camera_node",
@@ -34,9 +40,9 @@ def generate_launch_description():
                         "width": ParameterValue(width, value_type=int),
                         "height": ParameterValue(height, value_type=int),
                         "fps": ParameterValue(fps, value_type=float),
+                        "qos_reliability": qos_reliability,
                     }
                 ],
-                additional_env={"PYTHONNOUSERSITE": "1"},
             ),
         ]
     )
